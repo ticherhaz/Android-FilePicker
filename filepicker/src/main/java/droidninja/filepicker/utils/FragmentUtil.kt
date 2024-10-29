@@ -1,9 +1,7 @@
 package droidninja.filepicker.utils
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.fragment.app.Fragment
 import droidninja.filepicker.R
 import droidninja.filepicker.fragments.BaseFragment
 
@@ -38,33 +36,33 @@ object FragmentUtil {
 
     fun removeFragment(activity: AppCompatActivity, fragment: BaseFragment) {
         activity.supportFragmentManager.beginTransaction()
-                .remove(fragment)
-                .commit()
+            .remove(fragment)
+            .commit()
     }
 
 
     fun showFragment(activity: AppCompatActivity, fragment: BaseFragment) {
         activity.supportFragmentManager.beginTransaction()
-                .show(fragment)
-                .commit()
+            .show(fragment)
+            .commit()
     }
 
     fun hideFragment(activity: AppCompatActivity, fragment: BaseFragment) {
         activity.supportFragmentManager.beginTransaction()
-                .hide(fragment)
-                .commit()
+            .hide(fragment)
+            .commit()
     }
 
     fun attachFragment(activity: AppCompatActivity, fragment: BaseFragment) {
         activity.supportFragmentManager.beginTransaction()
-                .attach(fragment)
-                .commit()
+            .attach(fragment)
+            .commit()
     }
 
     fun detachFragment(activity: AppCompatActivity, fragment: BaseFragment) {
         activity.supportFragmentManager.beginTransaction()
-                .detach(fragment)
-                .commit()
+            .detach(fragment)
+            .commit()
     }
 
     fun getFragmentByTag(appCompatActivity: AppCompatActivity, tag: String): Fragment? {

@@ -2,11 +2,11 @@ package droidninja.filepicker.fragments
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
@@ -22,8 +22,10 @@ class MediaPickerFragment : BaseFragment() {
     private var mListener: MediaPickerFragmentListener? = null
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_media_picker, container, false)
     }
@@ -59,17 +61,41 @@ class MediaPickerFragment : BaseFragment() {
 
         if (PickerManager.showImages()) {
             if (PickerManager.isShowFolderView)
-                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.images))
+                adapter.addFragment(
+                    MediaFolderPickerFragment.newInstance(
+                        FilePickerConst.MEDIA_TYPE_IMAGE,
+                        PickerManager.imageFileSize,
+                        PickerManager.videoFileSize
+                    ), getString(R.string.images)
+                )
             else
-                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.images))
+                adapter.addFragment(
+                    MediaDetailPickerFragment.newInstance(
+                        FilePickerConst.MEDIA_TYPE_IMAGE,
+                        PickerManager.imageFileSize,
+                        PickerManager.videoFileSize
+                    ), getString(R.string.images)
+                )
         } else
             tabLayout.visibility = View.GONE
 
         if (PickerManager.showVideo()) {
             if (PickerManager.isShowFolderView)
-                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.videos))
+                adapter.addFragment(
+                    MediaFolderPickerFragment.newInstance(
+                        FilePickerConst.MEDIA_TYPE_VIDEO,
+                        PickerManager.imageFileSize,
+                        PickerManager.videoFileSize
+                    ), getString(R.string.videos)
+                )
             else
-                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.videos))
+                adapter.addFragment(
+                    MediaDetailPickerFragment.newInstance(
+                        FilePickerConst.MEDIA_TYPE_VIDEO,
+                        PickerManager.imageFileSize,
+                        PickerManager.videoFileSize
+                    ), getString(R.string.videos)
+                )
         } else
             tabLayout.visibility = View.GONE
 

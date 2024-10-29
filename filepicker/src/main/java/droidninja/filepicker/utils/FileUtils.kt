@@ -1,11 +1,8 @@
 package droidninja.filepicker.utils
 
 import android.text.TextUtils
-
-import java.io.File
-
 import droidninja.filepicker.FilePickerConst
-import droidninja.filepicker.R
+import java.io.File
 
 /**
  * Created by droidNinja on 08/03/17.

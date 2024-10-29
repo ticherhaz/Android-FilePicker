@@ -21,7 +21,11 @@ object ContentUriUtils {
         var selection: String? = null
         var selectionArgs: Array<String>? = null
         // Uri is different in versions after KITKAT (Android 4.4), we need to
-        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.applicationContext, uri)) {
+        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(
+                context.applicationContext,
+                uri
+            )
+        ) {
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
                 val split = docId.split(":").toTypedArray()
@@ -29,7 +33,8 @@ object ContentUriUtils {
             } else if (isDownloadsDocument(uri)) {
                 val id = DocumentsContract.getDocumentId(uri)
                 uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
+                )
             } else if (isMediaDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
                 val split = docId.split(":").toTypedArray()
@@ -43,7 +48,7 @@ object ContentUriUtils {
                 }
                 selection = "_id=?"
                 selectionArgs = arrayOf(
-                        split[1]
+                    split[1]
                 )
             }
         }
@@ -52,10 +57,11 @@ object ContentUriUtils {
                 return uri.lastPathSegment
             }
             val projection = arrayOf(
-                    MediaStore.Images.Media.DATA
+                MediaStore.Images.Media.DATA
             )
             try {
-                val cursor = context.contentResolver?.query(uri, projection, selection, selectionArgs, null)
+                val cursor =
+                    context.contentResolver?.query(uri, projection, selection, selectionArgs, null)
                 var path: String? = null
                 if (cursor != null) {
                     val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)

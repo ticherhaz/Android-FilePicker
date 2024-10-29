@@ -2,9 +2,6 @@ package droidninja.filepicker.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.SearchView
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,6 +9,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
@@ -30,10 +30,12 @@ class DocFragment : BaseFragment(), FileAdapterListener {
     private var fileListAdapter: FileListAdapter? = null
 
     val fileType: FileType?
-        get() = arguments?.getParcelable(BaseFragment.Companion.FILE_TYPE)
+        get() = arguments?.getParcelable(FILE_TYPE)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_photo_picker, container, false)
     }
@@ -44,7 +46,8 @@ class DocFragment : BaseFragment(), FileAdapterListener {
             mListener = context
         } else {
             throw RuntimeException(
-                    "$context must implement PhotoPickerFragmentListener")
+                "$context must implement PhotoPickerFragmentListener"
+            )
         }
     }
 
@@ -60,7 +63,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
 
     override fun onItemSelected() {
         mListener?.onItemSelected()
-        fileListAdapter?.let { adapter->
+        fileListAdapter?.let { adapter ->
             selectAllItem?.let { menuItem ->
                 if (adapter.itemCount == adapter.selectedItemCount) {
                     menuItem.setIcon(R.drawable.ic_select_all)
@@ -95,8 +98,10 @@ class DocFragment : BaseFragment(), FileAdapterListener {
                 context?.let {
                     fileListAdapter = recyclerView.adapter as? FileListAdapter
                     if (fileListAdapter == null) {
-                        fileListAdapter = FileListAdapter(it, dirs, PickerManager.selectedFiles,
-                                this)
+                        fileListAdapter = FileListAdapter(
+                            it, dirs, PickerManager.selectedFiles,
+                            this
+                        )
 
                         recyclerView.adapter = fileListAdapter
                     } else {
@@ -130,7 +135,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                    fileListAdapter?.filter?.filter(newText)
+                fileListAdapter?.filter?.filter(newText)
                 return true
             }
         })
@@ -141,7 +146,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == R.id.action_select) {
-            fileListAdapter?.let { adapter->
+            fileListAdapter?.let { adapter ->
                 selectAllItem?.let { menuItem ->
                     if (menuItem.isChecked) {
                         adapter.clearSelection()
@@ -151,7 +156,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
                     } else {
                         adapter.selectAll()
                         PickerManager
-                                .add(adapter.selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT)
+                            .add(adapter.selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT)
                         menuItem.setIcon(R.drawable.ic_select_all)
                     }
 
@@ -172,7 +177,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
         fun newInstance(fileType: FileType): DocFragment {
             val photoPickerFragment = DocFragment()
             val bun = Bundle()
-            bun.putParcelable(BaseFragment.Companion.FILE_TYPE, fileType)
+            bun.putParcelable(FILE_TYPE, fileType)
             photoPickerFragment.arguments = bun
             return photoPickerFragment
         }

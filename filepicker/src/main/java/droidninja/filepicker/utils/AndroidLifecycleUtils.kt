@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 
 object AndroidLifecycleUtils {
     fun canLoadImage(fragment: Fragment?): Boolean {
@@ -35,7 +34,8 @@ object AndroidLifecycleUtils {
             return true
         }
 
-        val destroyed = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed
+        val destroyed =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed
 
         return !(destroyed || activity.isFinishing)
 

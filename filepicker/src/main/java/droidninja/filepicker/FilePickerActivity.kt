@@ -1,7 +1,6 @@
 package droidninja.filepicker
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -15,7 +14,9 @@ import droidninja.filepicker.fragments.PhotoPickerFragmentListener
 import droidninja.filepicker.utils.FragmentUtil
 import java.util.*
 
-class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener, DocFragment.DocFragmentListener, DocPickerFragment.DocPickerFragmentListener, MediaPickerFragment.MediaPickerFragmentListener {
+class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener,
+    DocFragment.DocFragmentListener, DocPickerFragment.DocPickerFragmentListener,
+    MediaPickerFragment.MediaPickerFragmentListener {
     private var type: Int = 0
 
     @SuppressLint("MissingSuperCall")
@@ -26,8 +27,10 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
     override fun initView() {
         val intent = intent
         if (intent != null) {
-            val selectedPaths: ArrayList<Uri>? = intent.getParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
-            type = intent.getIntExtra(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER)
+            val selectedPaths: ArrayList<Uri>? =
+                intent.getParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
+            type =
+                intent.getIntExtra(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER)
 
             if (selectedPaths != null) {
 
@@ -55,7 +58,8 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
             if (maxCount == -1 && count > 0) {
                 actionBar.title = String.format(getString(R.string.attachments_num), count)
             } else if (maxCount > 0 && count > 0) {
-                actionBar.title = String.format(getString(R.string.attachments_title_text), count, maxCount)
+                actionBar.title =
+                    String.format(getString(R.string.attachments_title_text), count, maxCount)
             } else if (!TextUtils.isEmpty(PickerManager.title)) {
                 actionBar.title = PickerManager.title
             } else {
@@ -108,14 +112,14 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
 
     override fun onBackPressed() {
         super.onBackPressed()
-        setResult(Activity.RESULT_CANCELED)
+        setResult(RESULT_CANCELED)
         finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            FilePickerConst.REQUEST_CODE_MEDIA_DETAIL -> if (resultCode == Activity.RESULT_OK) {
+            FilePickerConst.REQUEST_CODE_MEDIA_DETAIL -> if (resultCode == RESULT_OK) {
                 if (type == FilePickerConst.MEDIA_PICKER) {
                     returnData(PickerManager.selectedPhotos)
                 } else {
@@ -135,7 +139,7 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
             intent.putParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS, paths)
         }
 
-        setResult(Activity.RESULT_OK, intent)
+        setResult(RESULT_OK, intent)
         finish()
     }
 
@@ -150,10 +154,11 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
 
         if (PickerManager.getMaxCount() == 1 && currentCount == 1) {
             returnData(
-                    if (type == FilePickerConst.MEDIA_PICKER)
-                        PickerManager.selectedPhotos
-                    else
-                        PickerManager.selectedFiles)
+                if (type == FilePickerConst.MEDIA_PICKER)
+                    PickerManager.selectedPhotos
+                else
+                    PickerManager.selectedFiles
+            )
         }
     }
 

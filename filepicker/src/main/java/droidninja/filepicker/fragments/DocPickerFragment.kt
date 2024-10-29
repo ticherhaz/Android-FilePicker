@@ -31,11 +31,16 @@ class DocPickerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMDocPicker::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
+        ).get(VMDocPicker::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_doc_picker, container, false)
     }
@@ -101,7 +106,10 @@ class DocPickerFragment : BaseFragment() {
         val adapter = SectionsPagerAdapter(childFragmentManager)
         val supportedTypes = PickerManager.getFileTypes()
         for (index in supportedTypes.indices) {
-            adapter.addFragment(DocFragment.newInstance(supportedTypes[index]), supportedTypes[index].title)
+            adapter.addFragment(
+                DocFragment.newInstance(supportedTypes[index]),
+                supportedTypes[index].title
+            )
         }
 
         viewPager.offscreenPageLimit = supportedTypes.size

@@ -1,18 +1,17 @@
 package droidninja.filepicker
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.OrientationHelper
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import droidninja.filepicker.adapters.FileAdapterListener
@@ -21,8 +20,6 @@ import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.viewmodels.VMMediaPicker
-import java.util.ArrayList
-import java.util.Comparator
 
 class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     private var recyclerView: RecyclerView? = null
@@ -42,14 +39,26 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     }
 
     override fun initView() {
-        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application)).get(VMMediaPicker::class.java)
+        viewModel =
+            ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application)).get(
+                VMMediaPicker::class.java
+            )
         mGlideRequestManager = Glide.with(this)
         val intent = intent
         if (intent != null) {
 
-            fileType = intent.getIntExtra(FilePickerConst.EXTRA_FILE_TYPE, FilePickerConst.MEDIA_TYPE_IMAGE)
-            imageFileSize = intent.getIntExtra(FilePickerConst.EXTRA_IMAGE_FILE_SIZE, FilePickerConst.DEFAULT_FILE_SIZE)
-            videoFileSize = intent.getIntExtra(FilePickerConst.EXTRA_VIDEO_FILE_SIZE, FilePickerConst.DEFAULT_FILE_SIZE)
+            fileType = intent.getIntExtra(
+                FilePickerConst.EXTRA_FILE_TYPE,
+                FilePickerConst.MEDIA_TYPE_IMAGE
+            )
+            imageFileSize = intent.getIntExtra(
+                FilePickerConst.EXTRA_IMAGE_FILE_SIZE,
+                FilePickerConst.DEFAULT_FILE_SIZE
+            )
+            videoFileSize = intent.getIntExtra(
+                FilePickerConst.EXTRA_VIDEO_FILE_SIZE,
+                FilePickerConst.DEFAULT_FILE_SIZE
+            )
             photoDirectory = intent.getParcelableExtra(PhotoDirectory::class.java.simpleName)
             if (photoDirectory != null) {
                 setUpView()
@@ -66,7 +75,8 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
             if (maxCount == -1 && count > 0) {
                 actionBar.title = String.format(getString(R.string.attachments_num), count)
             } else if (maxCount > 0 && count > 0) {
-                actionBar.title = String.format(getString(R.string.attachments_title_text), count, maxCount)
+                actionBar.title =
+                    String.format(getString(R.string.attachments_title_text), count, maxCount)
             } else {
                 actionBar.title = photoDirectory?.name
             }
@@ -104,7 +114,12 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         viewModel.lvMediaData.observe(this, Observer { data ->
             updateList(data)
         })
-        viewModel.getMedia(bucketId = photoDirectory?.bucketId, mediaType = fileType, imageFileSize = imageFileSize, videoFileSize = videoFileSize)
+        viewModel.getMedia(
+            bucketId = photoDirectory?.bucketId,
+            mediaType = fileType,
+            imageFileSize = imageFileSize,
+            videoFileSize = videoFileSize
+        )
     }
 
     private fun updateList(medias: List<Media>) {
@@ -120,8 +135,10 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         if (photoGridAdapter != null) {
             photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
         } else {
-            photoGridAdapter = PhotoGridAdapter(this, mGlideRequestManager, medias,
-                    PickerManager.selectedPhotos, false, this)
+            photoGridAdapter = PhotoGridAdapter(
+                this, mGlideRequestManager, medias,
+                PickerManager.selectedPhotos, false, this
+            )
             recyclerView?.adapter = photoGridAdapter
         }
 
@@ -156,7 +173,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == R.id.action_done) {
-            setResult(Activity.RESULT_OK, null)
+            setResult(RESULT_OK, null)
             finish()
 
             return true
@@ -188,14 +205,14 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     override fun onItemSelected() {
         val maxCount = PickerManager.getMaxCount()
         if (maxCount == 1) {
-            setResult(Activity.RESULT_OK, null)
+            setResult(RESULT_OK, null)
             finish()
         }
         setTitle(PickerManager.currentCount)
     }
 
     override fun onBackPressed() {
-        setResult(Activity.RESULT_CANCELED, null)
+        setResult(RESULT_CANCELED, null)
         finish()
     }
 

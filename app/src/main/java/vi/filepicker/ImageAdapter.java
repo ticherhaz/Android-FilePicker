@@ -1,10 +1,6 @@
 package vi.filepicker;
 
 import android.content.Context;
-
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -12,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -24,15 +22,9 @@ import java.util.ArrayList;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.FileViewHolder> {
 
     private final ImageAdapterListener imageAdapterListener;
-
-    public interface ImageAdapterListener {
-        void onItemClick(Uri uri);
-    }
-
     private final ArrayList<Uri> paths;
     private final Context context;
     private int imageSize;
-
     public ImageAdapter(Context context, ArrayList<Uri> paths, ImageAdapterListener imageAdapterListener) {
         this.context = context;
         this.paths = paths;
@@ -79,6 +71,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.FileViewHold
     @Override
     public int getItemCount() {
         return paths.size();
+    }
+
+    public interface ImageAdapterListener {
+        void onItemClick(Uri uri);
     }
 
     public static class FileViewHolder extends RecyclerView.ViewHolder {

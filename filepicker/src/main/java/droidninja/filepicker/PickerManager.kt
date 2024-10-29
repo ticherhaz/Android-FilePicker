@@ -2,11 +2,10 @@ package droidninja.filepicker
 
 import android.content.pm.ActivityInfo
 import android.net.Uri
-import java.util.ArrayList
-
 import droidninja.filepicker.models.BaseFile
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
+import java.util.ArrayList
 import java.util.LinkedHashSet
 
 /**
@@ -37,7 +36,6 @@ object PickerManager {
     var videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
 
     var isDocSupport = true
-        get() = field
 
     var isEnableCamera = true
 
@@ -47,8 +45,8 @@ object PickerManager {
      * Default Detail Span is 3
      */
     var spanTypes = mutableMapOf(
-            FilePickerConst.SPAN_TYPE.FOLDER_SPAN to 2,
-            FilePickerConst.SPAN_TYPE.DETAIL_SPAN to 3
+        FilePickerConst.SPAN_TYPE.FOLDER_SPAN to 2,
+        FilePickerConst.SPAN_TYPE.DETAIL_SPAN to 3
     )
 
     /**
@@ -72,7 +70,6 @@ object PickerManager {
      * {@link #SCREEN_ORIENTATION_LOCKED},
      */
     var orientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        get() = field
 
     var isShowFolderView = true
 

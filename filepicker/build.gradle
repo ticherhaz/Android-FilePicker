@@ -1,20 +1,15 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-//apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: "com.jfrog.bintray"
 
-version = "1.3.0"
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
 
 android {
-    compileSdkVersion 30
+    compileSdk 35
+    namespace 'droidninja.filepicker'
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 30
-        versionCode 13
-        versionName version
+        targetSdkVersion 35
     }
     buildTypes {
         release {
@@ -23,78 +18,38 @@ android {
         }
     }
 
-    /*buildFeatures {
+    buildFeatures {
         buildConfig = true
-        viewBinding = true
-    }
-    kotlin {
-        jvmToolchain {
-            JavaVersion.VERSION_1_8
-        }
-    }*/
-    /*compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
         checkReleaseBuilds false
-    }*/
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation  'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
-    api 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+
+    api 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+    testImplementation 'junit:junit:4.13.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-
-def siteUrl = 'https://github.com/DroidNinja/Android-FilePicker'      // Homepage URL of the library
-def gitUrl = 'https://github.com/DroidNinja/Android-FilePicker.git'   // Git repository URL
-group = "com.droidninja"                                          // Maven Group ID for the artifact
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-
-                // Add your description here
-                name 'com.droidninja.filepicker'
-                description = 'Media and document picker'
-                url siteUrl
-
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'droidninja'
-                        name 'Arun Sharma'
-                        email 'arun2007ind@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
 }
 
 tasks.register('sourcesJar', Jar) {
@@ -111,44 +66,5 @@ tasks.register('javadoc', Javadoc) {
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-// https://github.com/bintray/gradle-bintray-plugin
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        // it is the name that appears in bintray when logged
-        name = "com.droidninja.filepicker" // TODO
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-        version {
-            gpg {
-                sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = properties.getProperty("bintray.gpg.password")
-                //Optional. The passphrase for GPG signing'
-            }
-        }
-    }
-}
-repositories {
-    mavenCentral()
-    maven { url "https://jitpack.io" }
-}

@@ -1,12 +1,9 @@
 package droidninja.filepicker.utils
 
 import android.content.ContentResolver
-import android.content.Context
-import android.content.Intent
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
-import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import java.io.File
 
@@ -27,7 +24,7 @@ object FilePickerUtils {
 
     fun contains(types: Array<String>, mimeType: String?): Boolean {
         for (type in types) {
-            if(MimeTypeMap.getSingleton().getMimeTypeFromExtension(type) == mimeType){
+            if (MimeTypeMap.getSingleton().getMimeTypeFromExtension(type) == mimeType) {
                 return true
             }
         }
@@ -36,8 +33,8 @@ object FilePickerUtils {
 }
 
 fun ContentResolver.registerObserver(
-        uri: Uri,
-        observer: (selfChange: Boolean) -> Unit
+    uri: Uri,
+    observer: (selfChange: Boolean) -> Unit
 ): ContentObserver {
     val contentObserver = object : ContentObserver(Handler()) {
         override fun onChange(selfChange: Boolean) {

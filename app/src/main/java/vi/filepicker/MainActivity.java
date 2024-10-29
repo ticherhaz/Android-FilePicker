@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.OrientationHelper;
@@ -17,22 +16,18 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.ContentUriUtils;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.AppSettingsDialog;
-import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity {
 
     public static final int RC_PHOTO_PICKER_PERM = 123;
     public static final int RC_FILE_PICKER_PERM = 321;
     private static final int CUSTOM_REQUEST_CODE = 532;
-    private int MAX_ATTACHMENT_COUNT = 10;
+    private final int MAX_ATTACHMENT_COUNT = 10;
     private ArrayList<Uri> photoPaths = new ArrayList<>();
     private ArrayList<Uri> docPaths = new ArrayList<>();
 
@@ -54,26 +49,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         });
     }
 
-    @AfterPermissionGranted(RC_PHOTO_PICKER_PERM)
     public void pickPhotoClicked() {
-        if (EasyPermissions.hasPermissions(this, FilePickerConst.PERMISSIONS_FILE_PICKER)) {
-            onPickPhoto();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_photo_picker),
-                    RC_PHOTO_PICKER_PERM, FilePickerConst.PERMISSIONS_FILE_PICKER);
-        }
+        onPickPhoto();
     }
 
-    @AfterPermissionGranted(RC_FILE_PICKER_PERM)
     public void pickDocClicked() {
-        if (EasyPermissions.hasPermissions(this, FilePickerConst.PERMISSIONS_FILE_PICKER)) {
-            onPickDoc();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_doc_picker),
-                    RC_FILE_PICKER_PERM, FilePickerConst.PERMISSIONS_FILE_PICKER);
-        }
+        onPickDoc();
     }
 
     @Override
@@ -192,28 +173,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
     public void onOpenFragmentClicked(View view) {
         Intent intent = new Intent(this, FragmentActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            new AppSettingsDialog.Builder(this).build().show();
-        }
     }
 }

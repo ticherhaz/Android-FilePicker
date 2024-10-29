@@ -1,9 +1,6 @@
 package droidninja.filepicker.fragments
 
 import androidx.fragment.app.Fragment
-import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 

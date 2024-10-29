@@ -1,7 +1,6 @@
 package droidninja.filepicker.adapters
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -9,19 +8,20 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-
-import java.io.File
-import java.util.ArrayList
-
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 
-class FolderGridAdapter(private val context: Context, private val glide: RequestManager, var items: List<PhotoDirectory>, private val showCamera: Boolean) : RecyclerView.Adapter<FolderGridAdapter.PhotoViewHolder>() {
+class FolderGridAdapter(
+    private val context: Context,
+    private val glide: RequestManager,
+    var items: List<PhotoDirectory>,
+    private val showCamera: Boolean
+) : RecyclerView.Adapter<FolderGridAdapter.PhotoViewHolder>() {
     private var imageSize: Int = 0
     private var folderGridAdapterListener: FolderGridAdapterListener? = null
 
@@ -35,7 +35,8 @@ class FolderGridAdapter(private val context: Context, private val glide: Request
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.item_folder_layout, parent, false)
+        val itemView =
+            LayoutInflater.from(context).inflate(R.layout.item_folder_layout, parent, false)
 
         return PhotoViewHolder(itemView)
     }
@@ -54,19 +55,21 @@ class FolderGridAdapter(private val context: Context, private val glide: Request
 
             if (AndroidLifecycleUtils.canLoadImage(holder.imageView.context)) {
                 glide.load(photoDirectory.getCoverPath())
-                        .apply(RequestOptions
-                                .centerCropTransform()
-                                .override(imageSize, imageSize)
-                                .placeholder(R.drawable.image_placeholder))
-                        .thumbnail(0.5f)
-                        .into(holder.imageView)
+                    .apply(
+                        RequestOptions
+                            .centerCropTransform()
+                            .override(imageSize, imageSize)
+                            .placeholder(R.drawable.image_placeholder)
+                    )
+                    .thumbnail(0.5f)
+                    .into(holder.imageView)
             }
 
             holder.folderTitle.text = photoDirectory.name
             holder.folderCount.text = photoDirectory.medias.size.toString()
 
             holder.itemView.setOnClickListener {
-                    folderGridAdapterListener?.onFolderClicked(photoDirectory)
+                folderGridAdapterListener?.onFolderClicked(photoDirectory)
             }
             holder.bottomOverlay.visibility = View.VISIBLE
         } else {

@@ -3,7 +3,6 @@ package droidninja.filepicker.views
 import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -16,7 +15,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Checkable
-
 import droidninja.filepicker.R
 
 
@@ -44,12 +42,22 @@ class SmoothCheckBox : View, Checkable {
     private var mTickDrawing: Boolean = false
     private var mListener: OnCheckedChangeListener? = null
 
-    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+    @JvmOverloads
+    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init(attrs)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    ) {
         init(attrs)
     }
 
@@ -58,11 +66,14 @@ class SmoothCheckBox : View, Checkable {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.SmoothCheckBox)
         val tickColor = ta.getColor(R.styleable.SmoothCheckBox_color_tick, COLOR_TICK)
         mAnimDuration = ta.getInt(R.styleable.SmoothCheckBox_duration, DEF_ANIM_DURATION)
-        mFloorColor = ta.getColor(R.styleable.SmoothCheckBox_color_unchecked_stroke, COLOR_FLOOR_UNCHECKED)
+        mFloorColor =
+            ta.getColor(R.styleable.SmoothCheckBox_color_unchecked_stroke, COLOR_FLOOR_UNCHECKED)
         mCheckedColor = ta.getColor(R.styleable.SmoothCheckBox_color_checked, COLOR_CHECKED)
         mUnCheckedColor = ta.getColor(R.styleable.SmoothCheckBox_color_unchecked, COLOR_UNCHECKED)
-        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.SmoothCheckBox_stroke_width,
-                dp2px(context, 0f))
+        mStrokeWidth = ta.getDimensionPixelSize(
+            R.styleable.SmoothCheckBox_stroke_width,
+            dp2px(context, 0f)
+        )
         ta.recycle()
 
         mFloorUnCheckedColor = mFloorColor
@@ -81,7 +92,7 @@ class SmoothCheckBox : View, Checkable {
 
         mTickPath = Path()
         mCenterPoint = Point()
-        mTickPoints = arrayOf(Point(),Point(),Point())
+        mTickPoints = arrayOf(Point(), Point(), Point())
 
         setOnClickListener {
             toggle()
@@ -164,13 +175,15 @@ class SmoothCheckBox : View, Checkable {
 
     private fun measureSize(measureSpec: Int): Int {
         val defSize = dp2px(context, DEF_DRAW_SIZE.toFloat())
-        val specSize = View.MeasureSpec.getSize(measureSpec)
-        val specMode = View.MeasureSpec.getMode(measureSpec)
+        val specSize = MeasureSpec.getSize(measureSpec)
+        val specMode = MeasureSpec.getMode(measureSpec)
 
         var result = 0
         when (specMode) {
-            View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.AT_MOST -> result = Math.min(defSize, specSize)
-            View.MeasureSpec.EXACTLY -> result = specSize
+            MeasureSpec.UNSPECIFIED, MeasureSpec.AT_MOST -> result =
+                Math.min(defSize, specSize)
+
+            MeasureSpec.EXACTLY -> result = specSize
         }
         return result
     }
@@ -195,8 +208,18 @@ class SmoothCheckBox : View, Checkable {
         mTickPoints!![2].x = Math.round(measuredWidth.toFloat() / 30 * 22)
         mTickPoints!![2].y = Math.round(measuredHeight.toFloat() / 30 * 10)
 
-        mLeftLineDistance = Math.sqrt(Math.pow((mTickPoints!![1].x - mTickPoints!![0].x).toDouble(), 2.0) + Math.pow((mTickPoints!![1].y - mTickPoints!![0].y).toDouble(), 2.0)).toFloat()
-        mRightLineDistance = Math.sqrt(Math.pow((mTickPoints!![2].x - mTickPoints!![1].x).toDouble(), 2.0) + Math.pow((mTickPoints!![2].y - mTickPoints!![1].y).toDouble(), 2.0)).toFloat()
+        mLeftLineDistance = Math.sqrt(
+            Math.pow(
+                (mTickPoints!![1].x - mTickPoints!![0].x).toDouble(),
+                2.0
+            ) + Math.pow((mTickPoints!![1].y - mTickPoints!![0].y).toDouble(), 2.0)
+        ).toFloat()
+        mRightLineDistance = Math.sqrt(
+            Math.pow(
+                (mTickPoints!![2].x - mTickPoints!![1].x).toDouble(),
+                2.0
+            ) + Math.pow((mTickPoints!![2].y - mTickPoints!![1].y).toDouble(), 2.0)
+        ).toFloat()
         mTickPaint!!.strokeWidth = mStrokeWidth.toFloat()
     }
 
@@ -215,7 +238,12 @@ class SmoothCheckBox : View, Checkable {
     private fun drawBorder(canvas: Canvas) {
         mFloorPaint!!.color = mFloorColor
         val radius = mCenterPoint!!.x
-        canvas.drawCircle(mCenterPoint!!.x.toFloat(), mCenterPoint!!.y.toFloat(), radius * mFloorScale, mFloorPaint!!)
+        canvas.drawCircle(
+            mCenterPoint!!.x.toFloat(),
+            mCenterPoint!!.y.toFloat(),
+            radius * mFloorScale,
+            mFloorPaint!!
+        )
     }
 
     private fun drawTick(canvas: Canvas) {
@@ -230,8 +258,10 @@ class SmoothCheckBox : View, Checkable {
         if (mDrewDistance < mLeftLineDistance) {
             val step = if (mWidth / 20.0f < 3) 3f else mWidth / 20.0f
             mDrewDistance += step
-            val stopX = mTickPoints!![0].x + (mTickPoints!![1].x - mTickPoints!![0].x) * mDrewDistance / mLeftLineDistance
-            val stopY = mTickPoints!![0].y + (mTickPoints!![1].y - mTickPoints!![0].y) * mDrewDistance / mLeftLineDistance
+            val stopX =
+                mTickPoints!![0].x + (mTickPoints!![1].x - mTickPoints!![0].x) * mDrewDistance / mLeftLineDistance
+            val stopY =
+                mTickPoints!![0].y + (mTickPoints!![1].y - mTickPoints!![0].y) * mDrewDistance / mLeftLineDistance
 
             mTickPath!!.moveTo(mTickPoints!![0].x.toFloat(), mTickPoints!![0].y.toFloat())
             mTickPath!!.lineTo(stopX, stopY)
@@ -248,8 +278,10 @@ class SmoothCheckBox : View, Checkable {
 
             // draw right of the tick
             if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
-                val stopX = mTickPoints!![1].x + (mTickPoints!![2].x - mTickPoints!![1].x) * (mDrewDistance - mLeftLineDistance) / mRightLineDistance
-                val stopY = mTickPoints!![1].y - (mTickPoints!![1].y - mTickPoints!![2].y) * (mDrewDistance - mLeftLineDistance) / mRightLineDistance
+                val stopX =
+                    mTickPoints!![1].x + (mTickPoints!![2].x - mTickPoints!![1].x) * (mDrewDistance - mLeftLineDistance) / mRightLineDistance
+                val stopY =
+                    mTickPoints!![1].y - (mTickPoints!![1].y - mTickPoints!![2].y) * (mDrewDistance - mLeftLineDistance) / mRightLineDistance
 
                 mTickPath!!.reset()
                 mTickPath!!.moveTo(mTickPoints!![1].x.toFloat(), mTickPoints!![1].y.toFloat())

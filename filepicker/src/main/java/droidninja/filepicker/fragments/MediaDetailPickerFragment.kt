@@ -46,8 +46,10 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
     private var selectAllItem: MenuItem? = null
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_photo_picker, container, false)
     }
@@ -82,7 +84,10 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(PickerManager.hasSelectAll())
         mGlideRequestManager = Glide.with(this)
-        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMMediaPicker::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
+        ).get(VMMediaPicker::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,7 +99,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
         recyclerView = view.findViewById(R.id.recyclerview)
         emptyView = view.findViewById(R.id.empty_view)
         arguments?.let {
-            fileType = it.getInt(BaseFragment.FILE_TYPE)
+            fileType = it.getInt(FILE_TYPE)
             imageFileSize = it.getInt(FilePickerConst.EXTRA_IMAGE_FILE_SIZE)
             videoFileSize = it.getInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE)
             activity?.let {
@@ -102,7 +107,8 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
             }
             val spanCount = PickerManager.spanTypes[FilePickerConst.SPAN_TYPE.DETAIL_SPAN] ?: 3
             val layoutManager = StaggeredGridLayoutManager(spanCount, OrientationHelper.VERTICAL)
-            layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
+            layoutManager.gapStrategy =
+                StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
             recyclerView.layoutManager = layoutManager
             recyclerView.itemAnimator = DefaultItemAnimator()
 
@@ -130,10 +136,18 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
         })
 
         viewModel.lvDataChanged.observe(viewLifecycleOwner, Observer {
-            viewModel.getMedia(mediaType = fileType, imageFileSize = imageFileSize, videoFileSize = videoFileSize)
+            viewModel.getMedia(
+                mediaType = fileType,
+                imageFileSize = imageFileSize,
+                videoFileSize = videoFileSize
+            )
         })
 
-        viewModel.getMedia(mediaType = fileType, imageFileSize = imageFileSize, videoFileSize = videoFileSize)
+        viewModel.getMedia(
+            mediaType = fileType,
+            imageFileSize = imageFileSize,
+            videoFileSize = videoFileSize
+        )
     }
 
     private fun updateList(medias: List<Media>) {
@@ -148,16 +162,31 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
                 if (photoGridAdapter != null) {
                     photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
                 } else {
-                    photoGridAdapter = PhotoGridAdapter(it, mGlideRequestManager, medias, PickerManager.selectedPhotos, fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera, this)
+                    photoGridAdapter = PhotoGridAdapter(
+                        it,
+                        mGlideRequestManager,
+                        medias,
+                        PickerManager.selectedPhotos,
+                        fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera,
+                        this
+                    )
                     recyclerView.adapter = photoGridAdapter
                     photoGridAdapter?.setCameraListener(View.OnClickListener {
                         try {
                             uiScope.launch {
-                                val intent = withContext(Dispatchers.IO) { imageCaptureManager?.dispatchTakePictureIntent() }
+                                val intent =
+                                    withContext(Dispatchers.IO) { imageCaptureManager?.dispatchTakePictureIntent() }
                                 if (intent != null)
-                                    startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO)
+                                    startActivityForResult(
+                                        intent,
+                                        ImageCaptureManager.REQUEST_TAKE_PHOTO
+                                    )
                                 else
-                                    Toast.makeText(activity, R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        activity,
+                                        R.string.no_camera_exists,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                             }
                         } catch (e: IOException) {
                             e.printStackTrace()
@@ -233,10 +262,14 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
         private val TAG = MediaDetailPickerFragment::class.java.simpleName
         private val SCROLL_THRESHOLD = 30
 
-        fun newInstance(fileType: Int, imageFileSize: Int, videoFileSize: Int): MediaDetailPickerFragment {
+        fun newInstance(
+            fileType: Int,
+            imageFileSize: Int,
+            videoFileSize: Int
+        ): MediaDetailPickerFragment {
             val mediaDetailPickerFragment = MediaDetailPickerFragment()
             val bun = Bundle()
-            bun.putInt(BaseFragment.Companion.FILE_TYPE, fileType)
+            bun.putInt(FILE_TYPE, fileType)
             bun.putInt(FilePickerConst.EXTRA_IMAGE_FILE_SIZE, imageFileSize)
             bun.putInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE, videoFileSize)
             mediaDetailPickerFragment.arguments = bun

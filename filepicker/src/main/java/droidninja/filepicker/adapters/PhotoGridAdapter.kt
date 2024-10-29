@@ -2,20 +2,15 @@ package droidninja.filepicker.adapters
 
 import android.content.Context
 import android.net.Uri
-import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
-
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-
-import java.io.File
-import java.util.ArrayList
-
 import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
@@ -23,12 +18,14 @@ import droidninja.filepicker.models.Media
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.views.SmoothCheckBox
 
-class PhotoGridAdapter(private val context: Context,
-                       private val glide: RequestManager,
-                       medias: List<Media>,
-                       selectedPaths: MutableList<Uri>,
-                       private val showCamera: Boolean,
-                       private val mListener: FileAdapterListener?) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
+class PhotoGridAdapter(
+    private val context: Context,
+    private val glide: RequestManager,
+    medias: List<Media>,
+    selectedPaths: MutableList<Uri>,
+    private val showCamera: Boolean,
+    private val mListener: FileAdapterListener?
+) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
     private var imageSize: Int = 0
     private var cameraOnClickListener: View.OnClickListener? = null
 
@@ -37,7 +34,8 @@ class PhotoGridAdapter(private val context: Context,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.item_photo_layout, parent, false)
+        val itemView =
+            LayoutInflater.from(context).inflate(R.layout.item_photo_layout, parent, false)
 
         return PhotoViewHolder(itemView)
     }
@@ -56,12 +54,14 @@ class PhotoGridAdapter(private val context: Context,
 
             if (AndroidLifecycleUtils.canLoadImage(holder.imageView.context)) {
                 glide.load(media.path)
-                        .apply(RequestOptions
-                                .centerCropTransform()
-                                .override(imageSize, imageSize)
-                                .placeholder(R.drawable.image_placeholder))
-                        .thumbnail(0.5f)
-                        .into(holder.imageView)
+                    .apply(
+                        RequestOptions
+                            .centerCropTransform()
+                            .override(imageSize, imageSize)
+                            .placeholder(R.drawable.image_placeholder)
+                    )
+                    .thumbnail(0.5f)
+                    .into(holder.imageView)
             }
 
 
@@ -83,7 +83,8 @@ class PhotoGridAdapter(private val context: Context,
             holder.selectBg.visibility = if (isSelected(media)) View.VISIBLE else View.GONE
             holder.checkBox.visibility = if (isSelected(media)) View.VISIBLE else View.GONE
 
-            holder.checkBox.setOnCheckedChangeListener(object : SmoothCheckBox.OnCheckedChangeListener {
+            holder.checkBox.setOnCheckedChangeListener(object :
+                SmoothCheckBox.OnCheckedChangeListener {
                 override fun onCheckedChanged(checkBox: SmoothCheckBox, isChecked: Boolean) {
                     toggleSelection(media)
                     holder.selectBg.visibility = if (isChecked) View.VISIBLE else View.GONE

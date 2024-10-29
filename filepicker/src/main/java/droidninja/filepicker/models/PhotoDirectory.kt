@@ -6,12 +6,12 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class PhotoDirectory(
-                var id: Long = 0,
-                var bucketId: String? = null,
-                private var coverPath: Uri? = null,
-                var name: String? = null,
-                var dateAdded: Long = 0,
-                val medias: MutableList<Media> = mutableListOf()
+    var id: Long = 0,
+    var bucketId: String? = null,
+    private var coverPath: Uri? = null,
+    var name: String? = null,
+    var dateAdded: Long = 0,
+    val medias: MutableList<Media> = mutableListOf()
 ) : Parcelable {
 
     fun getCoverPath(): Uri? {
@@ -19,7 +19,7 @@ class PhotoDirectory(
             medias.size > 0 -> medias[0].path
             coverPath != null -> coverPath
             else -> null
-        };
+        }
     }
 
     fun setCoverPath(coverPath: Uri?) {

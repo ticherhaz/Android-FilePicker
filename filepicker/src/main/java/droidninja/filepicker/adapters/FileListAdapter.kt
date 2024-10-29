@@ -2,7 +2,6 @@ package droidninja.filepicker.adapters
 
 import android.content.Context
 import android.net.Uri
-import androidx.recyclerview.widget.RecyclerView
 import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
@@ -11,20 +10,24 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
-
-import java.util.ArrayList
-
+import androidx.recyclerview.widget.RecyclerView
 import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.models.Document
 import droidninja.filepicker.views.SmoothCheckBox
+import java.util.ArrayList
 
 /**
  * Created by droidNinja on 29/07/16.
  */
-class FileListAdapter(private val context: Context, private var mFilteredList: List<Document>, selectedPaths: MutableList<Uri>,
-                      private val mListener: FileAdapterListener?) : SelectableAdapter<FileListAdapter.FileViewHolder, Document>(mFilteredList, selectedPaths), Filterable {
+class FileListAdapter(
+    private val context: Context,
+    private var mFilteredList: List<Document>,
+    selectedPaths: MutableList<Uri>,
+    private val mListener: FileAdapterListener?
+) : SelectableAdapter<FileListAdapter.FileViewHolder, Document>(mFilteredList, selectedPaths),
+    Filterable {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder {
         val itemView = LayoutInflater.from(context).inflate(R.layout.item_doc_layout, parent, false)
@@ -45,8 +48,12 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
         }
 
         holder.fileNameTextView.text = document.name
-        holder.fileSizeTextView.text = Formatter.formatShortFileSize(context, java.lang.Long.parseLong(document.size
-                ?: "0"))
+        holder.fileSizeTextView.text = Formatter.formatShortFileSize(
+            context, java.lang.Long.parseLong(
+                document.size
+                    ?: "0"
+            )
+        )
 
         holder.itemView.setOnClickListener { onItemClicked(document, holder) }
 
@@ -58,7 +65,8 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
         holder.checkBox.isChecked = isSelected(document)
 
         holder.itemView.setBackgroundResource(
-                if (isSelected(document)) R.color.bg_gray else android.R.color.white)
+            if (isSelected(document)) R.color.bg_gray else android.R.color.white
+        )
         holder.checkBox.visibility = if (isSelected(document)) View.VISIBLE else View.GONE
 
         holder.checkBox.setOnCheckedChangeListener(object : SmoothCheckBox.OnCheckedChangeListener {
@@ -96,7 +104,7 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
 
     override fun getFilter(): Filter {
         return object : Filter() {
-            override fun performFiltering(charSequence: CharSequence): Filter.FilterResults {
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
 
                 val charString = charSequence.toString()
 
@@ -118,13 +126,16 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
                     mFilteredList = filteredList
                 }
 
-                val filterResults = Filter.FilterResults()
+                val filterResults = FilterResults()
                 filterResults.values = mFilteredList
                 return filterResults
             }
 
             @Suppress("UNCHECKED_CAST")
-            override fun publishResults(charSequence: CharSequence, filterResults: Filter.FilterResults) {
+            override fun publishResults(
+                charSequence: CharSequence,
+                filterResults: FilterResults
+            ) {
                 mFilteredList = filterResults.values as List<Document>
                 notifyDataSetChanged()
             }

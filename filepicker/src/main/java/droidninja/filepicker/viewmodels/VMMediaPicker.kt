@@ -39,14 +39,19 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
     private fun registerContentObserver() {
         if (contentObserver == null) {
             contentObserver = getApplication<Application>().contentResolver.registerObserver(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             ) {
                 _lvDataChanged.value = true
             }
         }
     }
 
-    fun getMedia(bucketId: String? = null, mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE, imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE, videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE) {
+    fun getMedia(
+        bucketId: String? = null,
+        mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE,
+        imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE,
+        videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
+    ) {
         launchDataLoad {
             val medias = mutableListOf<Media>()
             queryImages(bucketId, mediaType, imageFileSize, videoFileSize).map { dir ->
@@ -59,7 +64,12 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun getPhotoDirs(bucketId: String? = null, mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE, imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE, videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE) {
+    fun getPhotoDirs(
+        bucketId: String? = null,
+        mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE,
+        imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE,
+        videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
+    ) {
         launchDataLoad {
             val dirs = queryImages(bucketId, mediaType, imageFileSize, videoFileSize)
             val photoDirectory = PhotoDirectory()
@@ -67,13 +77,18 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
 
             when (mediaType) {
                 FilePickerConst.MEDIA_TYPE_VIDEO -> {
-                    photoDirectory.name = getApplication<Application>().applicationContext.getString(R.string.all_videos)
+                    photoDirectory.name =
+                        getApplication<Application>().applicationContext.getString(R.string.all_videos)
                 }
+
                 FilePickerConst.MEDIA_TYPE_IMAGE -> {
-                    photoDirectory.name = getApplication<Application>().applicationContext.getString(R.string.all_photos)
+                    photoDirectory.name =
+                        getApplication<Application>().applicationContext.getString(R.string.all_photos)
                 }
+
                 else -> {
-                    photoDirectory.name = getApplication<Application>().applicationContext.getString(R.string.all_files)
+                    photoDirectory.name =
+                        getApplication<Application>().applicationContext.getString(R.string.all_files)
                 }
             }
 
@@ -93,7 +108,12 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
     }
 
     @WorkerThread
-    suspend fun queryImages(bucketId: String?, mediaType: Int, imageFileSize: Int, videoFileSize: Int): MutableList<PhotoDirectory> {
+    suspend fun queryImages(
+        bucketId: String?,
+        mediaType: Int,
+        imageFileSize: Int,
+        videoFileSize: Int
+    ): MutableList<PhotoDirectory> {
         var data = mutableListOf<PhotoDirectory>()
         withContext(Dispatchers.IO) {
             val projection = null
@@ -120,13 +140,20 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
             }
 
             if (!PickerManager.isShowGif) {
-                selection += " AND " + MediaStore.Images.Media.MIME_TYPE + "!='" + MimeTypeMap.getSingleton().getMimeTypeFromExtension("gif") + "'"
+                selection += " AND " + MediaStore.Images.Media.MIME_TYPE + "!='" + MimeTypeMap.getSingleton()
+                    .getMimeTypeFromExtension("gif") + "'"
             }
 
             if (bucketId != null)
                 selection += " AND " + MediaStore.Images.Media.BUCKET_ID + "='" + bucketId + "'"
 
-            val cursor = getApplication<Application>().contentResolver.query(uri, projection, selection, selectionArgs.toTypedArray(), sortOrder)
+            val cursor = getApplication<Application>().contentResolver.query(
+                uri,
+                projection,
+                selection,
+                selectionArgs.toTypedArray(),
+                sortOrder
+            )
 
             if (cursor != null) {
                 data = getPhotoDirectories(mediaType, cursor)
@@ -143,10 +170,13 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
         while (data.moveToNext()) {
 
             val imageId = data.getLong(data.getColumnIndexOrThrow(BaseColumns._ID))
-            val bucketId = data.getString(data.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_ID))
-            val name = data.getString(data.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))
+            val bucketId =
+                data.getString(data.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_ID))
+            val name =
+                data.getString(data.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))
             val fileName = data.getString(data.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE))
-            val mediaType = data.getInt(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE))
+            val mediaType =
+                data.getInt(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE))
 
             val photoDirectory = PhotoDirectory()
             photoDirectory.id = imageId
@@ -154,22 +184,23 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
             photoDirectory.name = name
 
             var contentUri = ContentUris.withAppendedId(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    imageId
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                imageId
             )
             if (fileType == FilePickerConst.MEDIA_TYPE_VIDEO) {
                 contentUri = ContentUris.withAppendedId(
-                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                        imageId
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    imageId
                 )
             }
             if (!directories.contains(photoDirectory)) {
                 photoDirectory.addPhoto(imageId, fileName, contentUri, mediaType)
-                photoDirectory.dateAdded = data.getLong(data.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED))
+                photoDirectory.dateAdded =
+                    data.getLong(data.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED))
                 directories.add(photoDirectory)
             } else {
                 directories[directories.indexOf(photoDirectory)]
-                        .addPhoto(imageId, fileName, contentUri, mediaType)
+                    .addPhoto(imageId, fileName, contentUri, mediaType)
             }
         }
 
